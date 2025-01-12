@@ -1,7 +1,14 @@
 import { usermodel } from "../models/user.model.js";
-
+import { validationResult } from "express-validator";
 // Create a new user
 export const createUser = async (req, res) => {
+  const validationError = validationResult(req); // checking any error whicle checing the payload criteria
+  if (!validationError.isEmpty()) {
+    return res.status(422).json({
+      message: "error occured please check the payoad",
+      error: validationError.array(),
+    });
+  }
   try {
     const { name, email, password } = req.body;
     const newUser = new usermodel({ name, email, password });
